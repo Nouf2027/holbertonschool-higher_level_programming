@@ -1,34 +1,55 @@
 #!/usr/bin/python3
-"""Module that defines the function matrix_divided."""
+"""
+This module defines a matrix division function
+"""
 
 
 def matrix_divided(matrix, div):
-    """Divide all elements of a matrix by div."""
+    """
+    Divides all elements of a matrix by a divisor.
 
-    msg = "matrix must be a matrix (list of lists) of integers/floats"
-    # matrix must be a matrix (list of lists) of integers/floats
-    if (not isinstance(matrix, list) or matrix == [] or
-            not all(isinstance(row, list) for row in matrix) or
-            not all(isinstance(num, (int, float))
-                    for row in matrix for num in row)):
-        raise TypeError(msg)
+    Args:
+        matrix (list): A list of lists of integers or floats.
+        div (int/float): The divisor.
 
-    # Each row of the matrix must have the same size
-    row_len = len(matrix[0])
-    if not all(len(row) == row_len for row in matrix):
-        raise TypeError("Each row of the matrix must have the same size")
+    Returns:
+        list: A new matrix with the result of the division.
 
-    # div must be a number
+    Raises:
+        TypeError: If matrix is not a list of lists of integers/floats.
+        TypeError: If each row of the matrix is not of the same size.
+        TypeError: If div is not an integer or float.
+        ZeroDivisionError: If div is equal to 0.
+    """
+    
+    # Error messages
+    type_err = "matrix must be a matrix (list of lists) of integers/floats"
+    size_err = "Each row of the matrix must have the same size"
+    div_type_err = "div must be a number"
+    div_zero_err = "division by zero"
+
+    # Validate div
     if not isinstance(div, (int, float)):
-        raise TypeError("div must be a number")
-
-    # div can't be equal to 0
+        raise TypeError(div_type_err)
+    
     if div == 0:
-        raise ZeroDivisionError("division by zero")
+        raise ZeroDivisionError(div_zero_err)
 
-    # حالة خاصة للاختبار اللي فيه infinity
-    if div == float("inf") or div == float("-inf"):
-        return [[0.0 for _ in row] for row in matrix]
+    # Validate matrix structure and content
+    if not isinstance(matrix, list) or len(matrix) == 0:
+        raise TypeError(type_err)
 
-    # تقسيم القيم وتقريبها إلى خانتين عشريتين
-    return [[round(num / div, 2) for num in row] for row in matrix]
+    for row in matrix:
+        if not isinstance(row, list):
+            raise TypeError(type_err)
+        
+        # Check if row size matches the first row
+        if len(row) != len(matrix[0]):
+            raise TypeError(size_err)
+        
+        for x in row:
+            if not isinstance(x, (int, float)):
+                raise TypeError(type_err)
+
+    # Perform division and return new matrix
+    return [[round(x / div, 2) for x in row] for row in matrix]
