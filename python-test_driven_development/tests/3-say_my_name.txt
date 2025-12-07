@@ -45,4 +45,4 @@ Test with None:
 
 Test with empty strings:
     >>> say_my_name("", "")
-    My name is
+    My name is 
