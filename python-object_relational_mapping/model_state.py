@@ -1,14 +1,20 @@
 #!/usr/bin/python3
-"""Module that defines the State class"""
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+"""Script that lists all states from the database hbtn_0e_0_usa"""
+import MySQLdb
+import sys
 
-Base = declarative_base()
-
-
-class State(Base):
-    """State class that links to the MySQL table states"""
-    __tablename__ = 'states'
-
-    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    name = Column(String(128), nullable=False)
+if __name__ == "__main__":
+    db = MySQLdb.connect(
+        host="localhost",
+        port=3306,
+        user=sys.argv[1],
+        passwd=sys.argv[2],
+        db=sys.argv[3]
+    )
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM states ORDER BY id ASC")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+    cursor.close()
+    db.close()
